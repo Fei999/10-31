@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+        <style>
+            ul{
+                list-style: none;
+            }
+            li{
+                width: 20%;
+                line-height: 30px;;
+            }
+            li>p{
+                float:left;
+                width:50%;
+                text-align: center;
+            }
+            time{
+                margin-left: 50px;
+                text-align: center;
+            }
+            span{
+                cursor: pointer;
+                float: right;
+                color: red;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class=".wrap">
+            <input type="text" id="ipt" />
+            <input type="button" value="Go" id="btn" />
+        </div>
+        <ul class="list">
+            <li>
+                <!-- <p>内容</p>
+                <p>时间</p>
+                <p>删除</p>
+ -->            </li>
+        </ul>
+        <script>
+                $("#btn").click(function(){
+                    value=$("#ipt").val();
+                    var d=Date().slice(16,24);
+                    console.log(d.toString())
+                    $.ajax({
+                        url:"http://localhost:3000/item/list",
+                        type:"POST",
+                        data:{
+                            val:value,
+                            d:d
+                        },
+                        success:function(data){
+                        },
+                        error:function(){
+                            console.log("服务器错误")
+                        }
+                    })
+                    $.ajax({
+                        url:"http://localhost:3000/item/list1",
+                        type:"POST",
+                        success:function(e){
+                            for(i in e){
+                                if(value===e[i].list){
+                                    console.log(value)
+                                    $("ul").append("<li>"+e[i].list+"<time>"+e[i].data+"</time><span data-id='"+e[i].id+"'>删除</span></li>")
+                                }
+                                
+                            }
+                            $("span").click(function(){
+                                var id=$("span").attr("data-id");
+                                var _this=$(this);
+                                $.ajax({
+                                    url:"http://localhost:3000/item/remlist",
+                                    type:"POST",
+                                    data:{
+                                        val:id
+                                    },
+                                    success:function(e){
+                                        _this.parent().remove();
+                                    },
+                                    error:function(){
+
+                                    }
+
+                                })
+                            })
+                        },
+                        error:function(){
+                            console.log("服务器错误")
+                        }
+                    })
+                })
+
+
+        </script>
+    </body>
+</html>
